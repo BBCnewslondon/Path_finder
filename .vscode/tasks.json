@@ -1,0 +1,44 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Delivery Route Optimizer",
+			"type": "shell",
+			"command": "c:/Users/singh/Path_finder/.venv/Scripts/python.exe",
+			"args": [
+				"main.py",
+				"--file",
+				"examples/sample_addresses.txt",
+				"--algorithm",
+				"2opt",
+				"--map",
+				"route_map.html"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Examples",
+			"type": "shell",
+			"command": "c:/Users/singh/Path_finder/.venv/Scripts/python.exe",
+			"args": [
+				"examples/example_usage.py"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Tests",
+			"type": "shell",
+			"command": "c:/Users/singh/Path_finder/.venv/Scripts/python.exe",
+			"args": [
+				"tests/test_distance.py"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

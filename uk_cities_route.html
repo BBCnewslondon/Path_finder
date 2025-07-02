@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_da245f7045cda037593ff0bf989510be {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 50px; left: 50px; width: 200px; height: 90px; 
+                    background-color: white; border:2px solid grey; z-index:9999; 
+                    font-size:14px; padding: 10px">
+        <p><b>Route Legend</b></p>
+        <p><i class="fa fa-play" style="color:green"></i> Start Location</p>
+        <p><i class="fa fa-info-circle" style="color:blue"></i> Delivery Stops</p>
+        <p><i class="fa fa-stop" style="color:red"></i> End Location</p>
+        </div>
+        
+    
+            <div class="folium-map" id="map_da245f7045cda037593ff0bf989510be" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_da245f7045cda037593ff0bf989510be = L.map(
+                "map_da245f7045cda037593ff0bf989510be",
+                {
+                    center: [52.907957833333334, -2.5356226],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_ae39a968e92cff7b2e4cd7ffc63c803e = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_ae39a968e92cff7b2e4cd7ffc63c803e.addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var marker_7c7d9556b09c9771224d22c449241fd1 = L.marker(
+                [55.9486867, -3.2004175],
+                {}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var icon_4d42b96885fc56de93b49a34ea788cb7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "play", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_7c7d9556b09c9771224d22c449241fd1.setIcon(icon_4d42b96885fc56de93b49a34ea788cb7);
+        
+    
+        var popup_7e23fe43aa100c17521ddd315114bd4d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c9ebd546e176fcbc20ed29ac37a23036 = $(`<div id="html_c9ebd546e176fcbc20ed29ac37a23036" style="width: 100.0%; height: 100.0%;">START: Edinburgh Castle, Edinburgh, Scotland</div>`)[0];
+                popup_7e23fe43aa100c17521ddd315114bd4d.setContent(html_c9ebd546e176fcbc20ed29ac37a23036);
+            
+        
+
+        marker_7c7d9556b09c9771224d22c449241fd1.bindPopup(popup_7e23fe43aa100c17521ddd315114bd4d)
+        ;
+
+        
+    
+    
+            marker_7c7d9556b09c9771224d22c449241fd1.bindTooltip(
+                `<div>
+                     Stop 1
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5896b01d0f2ba8339a652428856c4378 = L.marker(
+                [53.4792494, -2.2444288],
+                {}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var icon_d43da9de5a46183838af40888bc45c20 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5896b01d0f2ba8339a652428856c4378.setIcon(icon_d43da9de5a46183838af40888bc45c20);
+        
+    
+        var popup_1805f078f1a26b1b7f34a6294da9205d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_22db6a422f9db6d4fcd483480ea4f84a = $(`<div id="html_22db6a422f9db6d4fcd483480ea4f84a" style="width: 100.0%; height: 100.0%;">Stop 1: Manchester Town Hall, Manchester, England</div>`)[0];
+                popup_1805f078f1a26b1b7f34a6294da9205d.setContent(html_22db6a422f9db6d4fcd483480ea4f84a);
+            
+        
+
+        marker_5896b01d0f2ba8339a652428856c4378.bindPopup(popup_1805f078f1a26b1b7f34a6294da9205d)
+        ;
+
+        
+    
+    
+            marker_5896b01d0f2ba8339a652428856c4378.bindTooltip(
+                `<div>
+                     Stop 2
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_54f2ca5e5f0778c9da248d8085f51076 = L.marker(
+                [51.7587075, -1.2556685],
+                {}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var icon_9883d41ee6c2b9e026ccce05f9b542ae = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_54f2ca5e5f0778c9da248d8085f51076.setIcon(icon_9883d41ee6c2b9e026ccce05f9b542ae);
+        
+    
+        var popup_ab5ca5e804b242cc6fe4932e68c5473d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_96c23d89741edf25db42014f41cc311f = $(`<div id="html_96c23d89741edf25db42014f41cc311f" style="width: 100.0%; height: 100.0%;">Stop 2: University of Oxford, Oxford, England</div>`)[0];
+                popup_ab5ca5e804b242cc6fe4932e68c5473d.setContent(html_96c23d89741edf25db42014f41cc311f);
+            
+        
+
+        marker_54f2ca5e5f0778c9da248d8085f51076.bindPopup(popup_ab5ca5e804b242cc6fe4932e68c5473d)
+        ;
+
+        
+    
+    
+            marker_54f2ca5e5f0778c9da248d8085f51076.bindTooltip(
+                `<div>
+                     Stop 3
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_137806d4a7ae82d90c4e7eac8592d7a6 = L.marker(
+                [51.3814544, -2.3588659],
+                {}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var icon_6541a7a82a02502461f4fdceff1683b9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_137806d4a7ae82d90c4e7eac8592d7a6.setIcon(icon_6541a7a82a02502461f4fdceff1683b9);
+        
+    
+        var popup_f673ff9fb6cbdc6acafe97c7867bcd7f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4ff4230cb609d2a384332d11f41c5a60 = $(`<div id="html_4ff4230cb609d2a384332d11f41c5a60" style="width: 100.0%; height: 100.0%;">Stop 3: Bath Abbey, Bath, England</div>`)[0];
+                popup_f673ff9fb6cbdc6acafe97c7867bcd7f.setContent(html_4ff4230cb609d2a384332d11f41c5a60);
+            
+        
+
+        marker_137806d4a7ae82d90c4e7eac8592d7a6.bindPopup(popup_f673ff9fb6cbdc6acafe97c7867bcd7f)
+        ;
+
+        
+    
+    
+            marker_137806d4a7ae82d90c4e7eac8592d7a6.bindTooltip(
+                `<div>
+                     Stop 4
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_999cd01c8ab458b542d962613204553b = L.marker(
+                [51.4823315, -3.181171],
+                {}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var icon_d8e3b43258d37f0b32558740248fccd3 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_999cd01c8ab458b542d962613204553b.setIcon(icon_d8e3b43258d37f0b32558740248fccd3);
+        
+    
+        var popup_420131b6833c4af9cf37e59ba06b6f71 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_65220686772ebef90fcd13dbca9178a1 = $(`<div id="html_65220686772ebef90fcd13dbca9178a1" style="width: 100.0%; height: 100.0%;">Stop 4: Cardiff Castle, Cardiff, Wales</div>`)[0];
+                popup_420131b6833c4af9cf37e59ba06b6f71.setContent(html_65220686772ebef90fcd13dbca9178a1);
+            
+        
+
+        marker_999cd01c8ab458b542d962613204553b.bindPopup(popup_420131b6833c4af9cf37e59ba06b6f71)
+        ;
+
+        
+    
+    
+            marker_999cd01c8ab458b542d962613204553b.bindTooltip(
+                `<div>
+                     Stop 5
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_299e878a96ecb5ce718b693542ecce8f = L.marker(
+                [53.3973175, -2.9731839],
+                {}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+            var icon_2c20e5f409ab593db80d4f5e21c1c42f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "stop", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_299e878a96ecb5ce718b693542ecce8f.setIcon(icon_2c20e5f409ab593db80d4f5e21c1c42f);
+        
+    
+        var popup_66286a9ea89f5a3669e842959f78de57 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_19ef36be67a853b9ad15d07208e6dce8 = $(`<div id="html_19ef36be67a853b9ad15d07208e6dce8" style="width: 100.0%; height: 100.0%;">END: Liverpool Cathedral, Liverpool, England</div>`)[0];
+                popup_66286a9ea89f5a3669e842959f78de57.setContent(html_19ef36be67a853b9ad15d07208e6dce8);
+            
+        
+
+        marker_299e878a96ecb5ce718b693542ecce8f.bindPopup(popup_66286a9ea89f5a3669e842959f78de57)
+        ;
+
+        
+    
+    
+            marker_299e878a96ecb5ce718b693542ecce8f.bindTooltip(
+                `<div>
+                     Stop 6
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var poly_line_4dd5e6764babcbc00e1b2308d68cae05 = L.polyline(
+                [[55.9486867, -3.2004175], [53.4792494, -2.2444288], [51.7587075, -1.2556685], [51.3814544, -2.3588659], [51.4823315, -3.181171], [53.3973175, -2.9731839], [55.9486867, -3.2004175]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_da245f7045cda037593ff0bf989510be);
+        
+    
+        var popup_6ed9234517c5ebafd85c495ff0ddde21 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_1b9458b4b68a9c6daf78cea9e5618626 = $(`<div id="html_1b9458b4b68a9c6daf78cea9e5618626" style="width: 100.0%; height: 100.0%;">Optimized Route</div>`)[0];
+                popup_6ed9234517c5ebafd85c495ff0ddde21.setContent(html_1b9458b4b68a9c6daf78cea9e5618626);
+            
+        
+
+        poly_line_4dd5e6764babcbc00e1b2308d68cae05.bindPopup(popup_6ed9234517c5ebafd85c495ff0ddde21)
+        ;
+
+        
+    
+</script>
+</html>

@@ -1,0 +1,161 @@
+{
+  "123 main street, springfield, il 62701": {
+    "success": false
+  },
+  "456 oak avenue, springfield, il 62702": {
+    "success": true,
+    "lat": 39.8250562,
+    "lon": -89.6581469,
+    "full_address": "Oak Avenue, Springfield, Sangamon County, Illinois, 62702, United States"
+  },
+  "789 pine road, springfield, il 62703": {
+    "success": false
+  },
+  "321 elm street, springfield, il 62704": {
+    "success": false
+  },
+  "654 maple drive, springfield, il 62705": {
+    "success": false
+  },
+  "987 cedar lane, springfield, il 62706": {
+    "success": false
+  },
+  "springfield city hall, springfield, il": {
+    "success": true,
+    "lat": 39.7990092,
+    "lon": -89.6444645,
+    "full_address": "Springfield City Hall, 800, East Monroe Street, Springfield, Sangamon County, Illinois, 62701, United States"
+  },
+  "abraham lincoln presidential library, springfield, il": {
+    "success": true,
+    "lat": 39.8022508,
+    "lon": -89.6475058,
+    "full_address": "Abraham Lincoln Presidential Library, 112, North 6th Street, Springfield, Sangamon County, Illinois, 62701, United States"
+  },
+  "illinois state capitol, springfield, il": {
+    "success": true,
+    "lat": 39.7984257,
+    "lon": -89.654918,
+    "full_address": "Illinois State Capitol, 401, South 2nd Street, Vinegar Hill, Springfield, Sangamon County, Illinois, 62701, United States"
+  },
+  "university of illinois springfield, springfield, il": {
+    "success": true,
+    "lat": 39.7288145,
+    "lon": -89.6172915,
+    "full_address": "University of Illinois Springfield, 1, University Plaza, Springfield, Sangamon County, Illinois, 62703, United States"
+  },
+  "memorial medical center, springfield, il": {
+    "success": true,
+    "lat": 39.8101583,
+    "lon": -89.6545509,
+    "full_address": "Memorial Medical Center, 701, North 1st Street, Springfield, Sangamon County, Illinois, 62781, United States"
+  },
+  "springfield high school, springfield, il": {
+    "success": true,
+    "lat": 39.8008371,
+    "lon": -89.661107,
+    "full_address": "Springfield High School, 101, South Lewis Street, Springfield, Sangamon County, Illinois, 62704, United States"
+  },
+  "100 n 1st st, springfield, il": {
+    "success": true,
+    "lat": 39.801932,
+    "lon": -89.654709,
+    "full_address": "100, North 1st Street, Springfield, Sangamon County, Illinois, 62702, United States"
+  },
+  "200 s 2nd st, springfield, il": {
+    "success": true,
+    "lat": 39.800534,
+    "lon": -89.653217,
+    "full_address": "200, South 2nd Street, Vinegar Hill, Springfield, Sangamon County, Illinois, 62701, United States"
+  },
+  "300 e 3rd st, springfield, il": {
+    "success": false
+  },
+  "400 w 4th st, springfield, il": {
+    "success": false
+  },
+  "500 n 5th st, springfield, il": {
+    "success": true,
+    "lat": 39.8061787,
+    "lon": -89.6490767,
+    "full_address": "500, North 5th Street, Springfield, Sangamon County, Illinois, 62702, United States"
+  },
+  "600 s 6th st, springfield, il": {
+    "success": true,
+    "lat": 39.7958278,
+    "lon": -89.6477661,
+    "full_address": "600, South 6th Street, Springfield, Sangamon County, Illinois, 62701, United States"
+  },
+  "10 downing street, london, uk": {
+    "success": true,
+    "lat": 51.5034878,
+    "lon": -0.1276965,
+    "full_address": "10 Downing Street, 10, Downing Street, Westminster, Millbank, London, Greater London, England, SW1A 2AA, United Kingdom"
+  },
+  "buckingham palace, london, uk": {
+    "success": true,
+    "lat": 51.5008349,
+    "lon": -0.1430045,
+    "full_address": "Buckingham Palace, Buckingham Gate, Victoria, London, Greater London, England, SW1A 1AA, United Kingdom"
+  },
+  "tower of london, london, uk": {
+    "success": true,
+    "lat": 51.508217,
+    "lon": -0.0761879,
+    "full_address": "Tower of London, Tower Hill, Whitechapel, London Borough of Tower Hamlets, London, Greater London, England, EC3N 4AB, United Kingdom"
+  },
+  "westminster abbey, london, uk": {
+    "success": true,
+    "lat": 51.499399,
+    "lon": -0.127391,
+    "full_address": "Westminster Abbey, 20, Dean's Yard, Westminster, Millbank, London, Greater London, England, SW1P 3PA, United Kingdom"
+  },
+  "big ben, london, uk": {
+    "success": true,
+    "lat": 51.5007042,
+    "lon": -0.1245721,
+    "full_address": "Big Ben, Bridge Street, Westminster, Millbank, City of Westminster, Greater London, England, SW1A 2LW, United Kingdom"
+  },
+  "london eye, london, uk": {
+    "success": true,
+    "lat": 51.5006602,
+    "lon": -0.1180373,
+    "full_address": "London Eye, Westminster Bridge Road, South Bank, Waterloo, London Borough of Lambeth, London, Greater London, England, SE1 7PD, United Kingdom"
+  },
+  "edinburgh castle, edinburgh, scotland": {
+    "success": true,
+    "lat": 55.9486867,
+    "lon": -3.2004175,
+    "full_address": "Edinburgh Castle, Castlehill, Old Town, City of Edinburgh, Alba / Scotland, EH1 2NG, United Kingdom"
+  },
+  "university of oxford, oxford, england": {
+    "success": true,
+    "lat": 51.7587075,
+    "lon": -1.2556685,
+    "full_address": "Oxford University Museum of Natural History, Parks Road, Holywell, City Centre, Oxford, Oxfordshire, England, OX1 3PW, United Kingdom"
+  },
+  "cardiff castle, cardiff, wales": {
+    "success": true,
+    "lat": 51.4823315,
+    "lon": -3.181171,
+    "full_address": "Cardiff Castle, Duke Street, Castle Quarter, Castle, Cardiff, Cymru / Wales, CF10 3RB, United Kingdom"
+  },
+  "manchester town hall, manchester, england": {
+    "success": true,
+    "lat": 53.4792494,
+    "lon": -2.2444288,
+    "full_address": "Manchester Town Hall, Albert Square, Civic Quarter, City Centre, Manchester, Greater Manchester, England, M2 5DB, United Kingdom"
+  },
+  "liverpool cathedral, liverpool, england": {
+    "success": true,
+    "lat": 53.3973175,
+    "lon": -2.9731839,
+    "full_address": "Liverpool Cathedral, St James Road, Baltic Triangle, Toxteth, Liverpool, Liverpool City Region, England, L1 7BY, United Kingdom"
+  },
+  "bath abbey, bath, england": {
+    "success": true,
+    "lat": 51.3814544,
+    "lon": -2.3588659,
+    "full_address": "Bath Abbey, Abbey Churchyard, Kingsmead, Bath, Bath and North East Somerset, West of England, England, BA1 1LT, United Kingdom"
+  }
+}

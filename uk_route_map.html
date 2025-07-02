@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f548d26b81ff4abbcca6c8800ded935a {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 50px; left: 50px; width: 200px; height: 90px; 
+                    background-color: white; border:2px solid grey; z-index:9999; 
+                    font-size:14px; padding: 10px">
+        <p><b>Route Legend</b></p>
+        <p><i class="fa fa-play" style="color:green"></i> Start Location</p>
+        <p><i class="fa fa-info-circle" style="color:blue"></i> Delivery Stops</p>
+        <p><i class="fa fa-stop" style="color:red"></i> End Location</p>
+        </div>
+        
+    
+            <div class="folium-map" id="map_f548d26b81ff4abbcca6c8800ded935a" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f548d26b81ff4abbcca6c8800ded935a = L.map(
+                "map_f548d26b81ff4abbcca6c8800ded935a",
+                {
+                    center: [51.50221718333332, -0.11948154999999999],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_5a006327943a6b4c4bc15fa22072a8ab = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_5a006327943a6b4c4bc15fa22072a8ab.addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var marker_99af0a891349980864d30873fcbd7dbc = L.marker(
+                [51.5034878, -0.1276965],
+                {}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var icon_e8fc1dc576f0641dae6e17c5d8563e7c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "play", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_99af0a891349980864d30873fcbd7dbc.setIcon(icon_e8fc1dc576f0641dae6e17c5d8563e7c);
+        
+    
+        var popup_abf194186185e90f41868c8a38799268 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e1eb948365dd8e1e877007441a1fd6dd = $(`<div id="html_e1eb948365dd8e1e877007441a1fd6dd" style="width: 100.0%; height: 100.0%;">START: 10 Downing Street, London, UK</div>`)[0];
+                popup_abf194186185e90f41868c8a38799268.setContent(html_e1eb948365dd8e1e877007441a1fd6dd);
+            
+        
+
+        marker_99af0a891349980864d30873fcbd7dbc.bindPopup(popup_abf194186185e90f41868c8a38799268)
+        ;
+
+        
+    
+    
+            marker_99af0a891349980864d30873fcbd7dbc.bindTooltip(
+                `<div>
+                     Stop 1
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_94cdd124236b05af480ee2e39800679c = L.marker(
+                [51.5008349, -0.1430045],
+                {}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var icon_ad7ebf736aa08aea24bdade27c2bcc49 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_94cdd124236b05af480ee2e39800679c.setIcon(icon_ad7ebf736aa08aea24bdade27c2bcc49);
+        
+    
+        var popup_5eb324da2c92f95b1fe1330ff363fa9c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_81b906f47588ae147cbb426b8bae05c8 = $(`<div id="html_81b906f47588ae147cbb426b8bae05c8" style="width: 100.0%; height: 100.0%;">Stop 1: Buckingham Palace, London, UK</div>`)[0];
+                popup_5eb324da2c92f95b1fe1330ff363fa9c.setContent(html_81b906f47588ae147cbb426b8bae05c8);
+            
+        
+
+        marker_94cdd124236b05af480ee2e39800679c.bindPopup(popup_5eb324da2c92f95b1fe1330ff363fa9c)
+        ;
+
+        
+    
+    
+            marker_94cdd124236b05af480ee2e39800679c.bindTooltip(
+                `<div>
+                     Stop 2
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_15067d749e2b99254318f10e5f3ce424 = L.marker(
+                [51.499399, -0.127391],
+                {}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var icon_b93d956c1614702cc6d742ba60ed9bbf = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_15067d749e2b99254318f10e5f3ce424.setIcon(icon_b93d956c1614702cc6d742ba60ed9bbf);
+        
+    
+        var popup_23426be7644a0138aab55fff1dd2528f = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_23095ac7633c2e5931fd893926ba9f25 = $(`<div id="html_23095ac7633c2e5931fd893926ba9f25" style="width: 100.0%; height: 100.0%;">Stop 2: Westminster Abbey, London, UK</div>`)[0];
+                popup_23426be7644a0138aab55fff1dd2528f.setContent(html_23095ac7633c2e5931fd893926ba9f25);
+            
+        
+
+        marker_15067d749e2b99254318f10e5f3ce424.bindPopup(popup_23426be7644a0138aab55fff1dd2528f)
+        ;
+
+        
+    
+    
+            marker_15067d749e2b99254318f10e5f3ce424.bindTooltip(
+                `<div>
+                     Stop 3
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_91fc51d8e12c52d58081e3c410277fac = L.marker(
+                [51.5007042, -0.1245721],
+                {}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var icon_78a16c530c58a29dad0be6e3f6a9cffe = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_91fc51d8e12c52d58081e3c410277fac.setIcon(icon_78a16c530c58a29dad0be6e3f6a9cffe);
+        
+    
+        var popup_5339a6ee7f51823ecadaadfe950cf0c0 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5adcc2968573275933fe40643c87a265 = $(`<div id="html_5adcc2968573275933fe40643c87a265" style="width: 100.0%; height: 100.0%;">Stop 3: Big Ben, London, UK</div>`)[0];
+                popup_5339a6ee7f51823ecadaadfe950cf0c0.setContent(html_5adcc2968573275933fe40643c87a265);
+            
+        
+
+        marker_91fc51d8e12c52d58081e3c410277fac.bindPopup(popup_5339a6ee7f51823ecadaadfe950cf0c0)
+        ;
+
+        
+    
+    
+            marker_91fc51d8e12c52d58081e3c410277fac.bindTooltip(
+                `<div>
+                     Stop 4
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_07736fb8c26bf2a9a061be7add8f82d9 = L.marker(
+                [51.5006602, -0.1180373],
+                {}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var icon_5a21adccadc8862a294ddb99047d0ea1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_07736fb8c26bf2a9a061be7add8f82d9.setIcon(icon_5a21adccadc8862a294ddb99047d0ea1);
+        
+    
+        var popup_d83e6be30c78f82f669947ffff51cb03 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_831e6a7a5d2e836d791912ff338a4f39 = $(`<div id="html_831e6a7a5d2e836d791912ff338a4f39" style="width: 100.0%; height: 100.0%;">Stop 4: London Eye, London, UK</div>`)[0];
+                popup_d83e6be30c78f82f669947ffff51cb03.setContent(html_831e6a7a5d2e836d791912ff338a4f39);
+            
+        
+
+        marker_07736fb8c26bf2a9a061be7add8f82d9.bindPopup(popup_d83e6be30c78f82f669947ffff51cb03)
+        ;
+
+        
+    
+    
+            marker_07736fb8c26bf2a9a061be7add8f82d9.bindTooltip(
+                `<div>
+                     Stop 5
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3a0817a6814e2d6e79bc449f4150dd0e = L.marker(
+                [51.508217, -0.0761879],
+                {}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+            var icon_5d98f8f09c79f806e74baf19aff1f69a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "stop", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3a0817a6814e2d6e79bc449f4150dd0e.setIcon(icon_5d98f8f09c79f806e74baf19aff1f69a);
+        
+    
+        var popup_c6043061ec590ec775381eb3feb6c581 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_28b88464e6113965e03f58845fd0609a = $(`<div id="html_28b88464e6113965e03f58845fd0609a" style="width: 100.0%; height: 100.0%;">END: Tower of London, London, UK</div>`)[0];
+                popup_c6043061ec590ec775381eb3feb6c581.setContent(html_28b88464e6113965e03f58845fd0609a);
+            
+        
+
+        marker_3a0817a6814e2d6e79bc449f4150dd0e.bindPopup(popup_c6043061ec590ec775381eb3feb6c581)
+        ;
+
+        
+    
+    
+            marker_3a0817a6814e2d6e79bc449f4150dd0e.bindTooltip(
+                `<div>
+                     Stop 6
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var poly_line_671c2acb40fbb5e819880a53240a1f80 = L.polyline(
+                [[51.5034878, -0.1276965], [51.5008349, -0.1430045], [51.499399, -0.127391], [51.5007042, -0.1245721], [51.5006602, -0.1180373], [51.508217, -0.0761879], [51.5034878, -0.1276965]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_f548d26b81ff4abbcca6c8800ded935a);
+        
+    
+        var popup_620b4bea6838c603ed577b50bb2f44bc = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_1f673e6b4f77b70f751ad3adb67298b9 = $(`<div id="html_1f673e6b4f77b70f751ad3adb67298b9" style="width: 100.0%; height: 100.0%;">Optimized Route</div>`)[0];
+                popup_620b4bea6838c603ed577b50bb2f44bc.setContent(html_1f673e6b4f77b70f751ad3adb67298b9);
+            
+        
+
+        poly_line_671c2acb40fbb5e819880a53240a1f80.bindPopup(popup_620b4bea6838c603ed577b50bb2f44bc)
+        ;
+
+        
+    
+</script>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_0efc33c9804552134eb4dfabc268232b {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 50px; left: 50px; width: 200px; height: 90px; 
+                    background-color: white; border:2px solid grey; z-index:9999; 
+                    font-size:14px; padding: 10px">
+        <p><b>Route Legend</b></p>
+        <p><i class="fa fa-play" style="color:green"></i> Start Location</p>
+        <p><i class="fa fa-info-circle" style="color:blue"></i> Delivery Stops</p>
+        <p><i class="fa fa-stop" style="color:red"></i> End Location</p>
+        </div>
+        
+    
+            <div class="folium-map" id="map_0efc33c9804552134eb4dfabc268232b" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_0efc33c9804552134eb4dfabc268232b = L.map(
+                "map_0efc33c9804552134eb4dfabc268232b",
+                {
+                    center: [39.789915933333326, -89.64663961666668],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_425298f5091239fc30e744053150f229 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_425298f5091239fc30e744053150f229.addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var marker_37ac118c432490fd790bcb3d125b7a62 = L.marker(
+                [39.7990092, -89.6444645],
+                {}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var icon_298a430c963658374adb5d277b8b5f30 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "play", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_37ac118c432490fd790bcb3d125b7a62.setIcon(icon_298a430c963658374adb5d277b8b5f30);
+        
+    
+        var popup_c40293cfa50659f6bda7428aa7835b16 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_72c3f7b8cae11797e3509e5efa07b894 = $(`<div id="html_72c3f7b8cae11797e3509e5efa07b894" style="width: 100.0%; height: 100.0%;">START: Springfield City Hall, Springfield, IL</div>`)[0];
+                popup_c40293cfa50659f6bda7428aa7835b16.setContent(html_72c3f7b8cae11797e3509e5efa07b894);
+            
+        
+
+        marker_37ac118c432490fd790bcb3d125b7a62.bindPopup(popup_c40293cfa50659f6bda7428aa7835b16)
+        ;
+
+        
+    
+    
+            marker_37ac118c432490fd790bcb3d125b7a62.bindTooltip(
+                `<div>
+                     Stop 1
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5321965b372210d7c61c2bce73f3091f = L.marker(
+                [39.7288145, -89.6172915],
+                {}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var icon_d2de108935e70076662b69dfb084e514 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_5321965b372210d7c61c2bce73f3091f.setIcon(icon_d2de108935e70076662b69dfb084e514);
+        
+    
+        var popup_f4be4d58cd52d755ee1552d0e8116555 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_82fd3cec436bf3ee526bfcb6d3729567 = $(`<div id="html_82fd3cec436bf3ee526bfcb6d3729567" style="width: 100.0%; height: 100.0%;">Stop 1: University of Illinois Springfield, Springfield, IL</div>`)[0];
+                popup_f4be4d58cd52d755ee1552d0e8116555.setContent(html_82fd3cec436bf3ee526bfcb6d3729567);
+            
+        
+
+        marker_5321965b372210d7c61c2bce73f3091f.bindPopup(popup_f4be4d58cd52d755ee1552d0e8116555)
+        ;
+
+        
+    
+    
+            marker_5321965b372210d7c61c2bce73f3091f.bindTooltip(
+                `<div>
+                     Stop 2
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3bec5f6703f234ce1f37ccf825359493 = L.marker(
+                [39.7984257, -89.654918],
+                {}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var icon_120eb43e79af6382ad4e3aad23f2fc98 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_3bec5f6703f234ce1f37ccf825359493.setIcon(icon_120eb43e79af6382ad4e3aad23f2fc98);
+        
+    
+        var popup_812e8cbbe625400ad213687e7ec19a86 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_7188545c0f6cf11b26ae5333960777c8 = $(`<div id="html_7188545c0f6cf11b26ae5333960777c8" style="width: 100.0%; height: 100.0%;">Stop 2: Illinois State Capitol, Springfield, IL</div>`)[0];
+                popup_812e8cbbe625400ad213687e7ec19a86.setContent(html_7188545c0f6cf11b26ae5333960777c8);
+            
+        
+
+        marker_3bec5f6703f234ce1f37ccf825359493.bindPopup(popup_812e8cbbe625400ad213687e7ec19a86)
+        ;
+
+        
+    
+    
+            marker_3bec5f6703f234ce1f37ccf825359493.bindTooltip(
+                `<div>
+                     Stop 3
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b089ae423a06902ba69b0592bd919579 = L.marker(
+                [39.8008371, -89.661107],
+                {}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var icon_1679838d8ef99e64ebec0f859737e410 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_b089ae423a06902ba69b0592bd919579.setIcon(icon_1679838d8ef99e64ebec0f859737e410);
+        
+    
+        var popup_f585257ddacf1ec5b345292204f58814 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4bb177630d8cf076986f6e7cc21d85cd = $(`<div id="html_4bb177630d8cf076986f6e7cc21d85cd" style="width: 100.0%; height: 100.0%;">Stop 3: Springfield High School, Springfield, IL</div>`)[0];
+                popup_f585257ddacf1ec5b345292204f58814.setContent(html_4bb177630d8cf076986f6e7cc21d85cd);
+            
+        
+
+        marker_b089ae423a06902ba69b0592bd919579.bindPopup(popup_f585257ddacf1ec5b345292204f58814)
+        ;
+
+        
+    
+    
+            marker_b089ae423a06902ba69b0592bd919579.bindTooltip(
+                `<div>
+                     Stop 4
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a5919bd359137296deccc634cda22097 = L.marker(
+                [39.8101583, -89.6545509],
+                {}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var icon_6a4c127a1ff84fda61044001ab0f3934 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a5919bd359137296deccc634cda22097.setIcon(icon_6a4c127a1ff84fda61044001ab0f3934);
+        
+    
+        var popup_63a784f5ae322e061142eaaa544d835a = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_a4a6fcfa60a344a75ffa2bb4f31deef7 = $(`<div id="html_a4a6fcfa60a344a75ffa2bb4f31deef7" style="width: 100.0%; height: 100.0%;">Stop 4: Memorial Medical Center, Springfield, IL</div>`)[0];
+                popup_63a784f5ae322e061142eaaa544d835a.setContent(html_a4a6fcfa60a344a75ffa2bb4f31deef7);
+            
+        
+
+        marker_a5919bd359137296deccc634cda22097.bindPopup(popup_63a784f5ae322e061142eaaa544d835a)
+        ;
+
+        
+    
+    
+            marker_a5919bd359137296deccc634cda22097.bindTooltip(
+                `<div>
+                     Stop 5
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_07bcad93a667a4e6595637d0717ec7ae = L.marker(
+                [39.8022508, -89.6475058],
+                {}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+            var icon_2e5fc5f2be84530e7b34330f4393b5fe = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "stop", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_07bcad93a667a4e6595637d0717ec7ae.setIcon(icon_2e5fc5f2be84530e7b34330f4393b5fe);
+        
+    
+        var popup_5c6d9ef5e031122c00401e01f13721bd = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9d2d2f61851e9a8201837de66b706113 = $(`<div id="html_9d2d2f61851e9a8201837de66b706113" style="width: 100.0%; height: 100.0%;">END: Abraham Lincoln Presidential Library, Springfield, IL</div>`)[0];
+                popup_5c6d9ef5e031122c00401e01f13721bd.setContent(html_9d2d2f61851e9a8201837de66b706113);
+            
+        
+
+        marker_07bcad93a667a4e6595637d0717ec7ae.bindPopup(popup_5c6d9ef5e031122c00401e01f13721bd)
+        ;
+
+        
+    
+    
+            marker_07bcad93a667a4e6595637d0717ec7ae.bindTooltip(
+                `<div>
+                     Stop 6
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var poly_line_c0fbc3f9c9bdc669fef1cf65f08af3f5 = L.polyline(
+                [[39.7990092, -89.6444645], [39.7288145, -89.6172915], [39.7984257, -89.654918], [39.8008371, -89.661107], [39.8101583, -89.6545509], [39.8022508, -89.6475058], [39.7990092, -89.6444645]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_0efc33c9804552134eb4dfabc268232b);
+        
+    
+        var popup_6160ae77eab4b66d9d606399830600d9 = L.popup({"maxWidth": "100%"});
+
+        
+            
+                var html_65c3f8d1d29e187537b96c5ec000cd41 = $(`<div id="html_65c3f8d1d29e187537b96c5ec000cd41" style="width: 100.0%; height: 100.0%;">Optimized Route</div>`)[0];
+                popup_6160ae77eab4b66d9d606399830600d9.setContent(html_65c3f8d1d29e187537b96c5ec000cd41);
+            
+        
+
+        poly_line_c0fbc3f9c9bdc669fef1cf65f08af3f5.bindPopup(popup_6160ae77eab4b66d9d606399830600d9)
+        ;
+
+        
+    
+</script>
+</html>
