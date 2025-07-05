@@ -25,12 +25,13 @@ from src.utils import (
 class DeliveryRouteApp:
     """Main application class for delivery route optimization."""
     
-    def __init__(self):
+    def __init__(self, use_real_roads: bool = True):
         """Initialize the application."""
         self.geocoder = AddressGeocoder()
-        self.distance_calculator = DistanceCalculator()
+        self.distance_calculator = DistanceCalculator(use_real_roads=use_real_roads)
         self.route_optimizer = RouteOptimizer()
-        self.map_generator = MapGenerator()
+        self.map_generator = MapGenerator(use_real_roads=use_real_roads)
+        self.use_real_roads = use_real_roads
     
     def optimize_delivery_route(self, 
                                addresses: List[str],
@@ -114,8 +115,11 @@ class DeliveryRouteApp:
         if generate_map:
             try:
                 print(f"\nGenerating interactive map: {map_output}")
+                if self.use_real_roads:
+                    print("  Using real road paths for route visualization")
                 map_path = self.map_generator.create_route_map(
-                    valid_addresses, valid_coordinates, route_order, map_output
+                    valid_addresses, valid_coordinates, route_order, map_output, 
+                    use_real_roads=self.use_real_roads
                 )
                 print(f"Map saved to: {map_path}")
             except Exception as e:
@@ -168,6 +172,14 @@ Examples:
         '--start', type=str,
         help='Starting address (if not specified, uses first address)'
     )
+    parser.add_argument(
+        '--roads', action='store_true', default=True,
+        help='Use real road distances (default: True)'
+    )
+    parser.add_argument(
+        '--straight-line', action='store_true',
+        help='Use straight-line distances instead of roads'
+    )
     
     # Output options
     parser.add_argument(
@@ -197,7 +209,8 @@ Examples:
         sys.exit(1)
     
     # Create and run application
-    app = DeliveryRouteApp()
+    use_real_roads = not args.straight_line
+    app = DeliveryRouteApp(use_real_roads=use_real_roads)
     
     app.optimize_delivery_route(
         addresses=addresses,

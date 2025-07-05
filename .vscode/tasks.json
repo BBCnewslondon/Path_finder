@@ -39,6 +39,46 @@
 			"group": "build",
 			"isBackground": false,
 			"problemMatcher": []
+		},
+		{
+			"label": "Compare Routing Methods",
+			"type": "shell",
+			"command": "c:/Users/singh/Path_finder/.venv/Scripts/python.exe",
+			"args": [
+				"examples/routing_comparison.py"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "UK Addresses with Road Routing",
+			"type": "shell",
+			"command": "c:/Users/singh/Path_finder/.venv/Scripts/python.exe",
+			"args": [
+				"main.py",
+				"--file",
+				"examples/uk_addresses.txt",
+				"--algorithm",
+				"2opt",
+				"--map",
+				"uk_roads_map.html",
+				"--roads"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Visual Route Comparison",
+			"type": "shell",
+			"command": "c:/Users/singh/Path_finder/.venv/Scripts/python.exe",
+			"args": [
+				"examples/visual_comparison.py"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": []
 		}
 	]
 }

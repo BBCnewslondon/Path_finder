@@ -1,4 +1,19 @@
-# Delivery Route Optimizer
+# De## Features
+
+- **Address Geocoding**: Convert street addresses to G# Create visual comparison of straight-line vs real road routes
+python examples/visual_comparison.py
+
+# Use straight-line distances (faster but less accurate)
+python main.py --file addresses.txt --straight-lineordinates with caching
+- **🆕 Real Road Routing**: Uses actual road networks for accurate distance calculations
+- **🆕 Real Road Visualization**: Maps show actual driving routes following streets (not straight lines)
+- **Multiple Routing Services**: OSRM (free), Google Maps, OpenRouteService with automatic fallback
+- **Route Optimization**: Find the shortest path visiting all delivery locations
+- **Multiple Algorithms**: Support for different TSP solving approaches
+- **Visual Maps**: Generate interactive maps showing optimized routes
+- **Time Estimation**: Calculate estimated travel times between locations
+- **Flexible Input**: Support for various address formats
+- **🆕 Routing Comparison**: Compare straight-line vs real road distancesoute Optimizer
 
 A Python application that finds the shortest delivery routes for multiple addresses, optimizing for minimum travel time. This software solves the Traveling Salesman Problem (TSP) to help delivery personnel minimize their time on the road.
 
@@ -57,8 +72,14 @@ python main.py --addresses "123 Main St, City, State" "456 Oak Ave, City, State"
 # Load addresses from a file
 python main.py --file addresses.txt
 
-# Generate an interactive map
-python main.py --addresses "Address 1" "Address 2" "Address 3" --map output_map.html
+# Generate an interactive map with real road routing
+python main.py --addresses "Address 1" "Address 2" "Address 3" --map output_map.html --roads
+
+# Compare straight-line vs road routing
+python examples/routing_comparison.py
+
+# Use straight-line distances (faster, less accurate)
+python main.py --file addresses.txt --straight-line
 
 # Try the sample data
 python main.py --file examples/sample_addresses.txt --algorithm 2opt --map route_map.html
@@ -117,6 +138,16 @@ The software implements multiple approaches to solve the TSP:
 2. **2-opt Improvement**: Local search optimization
 3. **OR-Tools**: Google's optimization library for exact solutions
 4. **Genetic Algorithm**: Evolutionary approach for larger datasets
+
+## 🆕 Road Routing Services
+
+The software now supports real road network routing through multiple services:
+
+1. **OSRM (Open Source Routing Machine)**: Free, no API key required
+2. **OpenRouteService**: Free with API key registration
+3. **Google Maps**: Requires paid API key but very accurate
+
+The system automatically tries multiple services with fallback to ensure reliability.
 
 ## Contributing
 

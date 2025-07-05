@@ -10,6 +10,9 @@ import os
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class GeocodeCache:
@@ -50,13 +53,13 @@ class GeocodeCache:
 class AddressGeocoder:
     """
     Geocodes addresses to coordinates using multiple services.
-    Implements caching and error handling for robust operation.
+    Implements fallback geocoding services and caching for robust operation.
     """
     
     def __init__(self, user_agent: str = "DeliveryRouteOptimizer", 
                  timeout: int = 10, use_cache: bool = True):
         """
-        Initialize geocoder.
+        Initialize geocoder with multiple services.
         
         Args:
             user_agent: User agent string for API requests
@@ -64,12 +67,33 @@ class AddressGeocoder:
             use_cache: Whether to use geocoding cache
         """
         self.timeout = timeout
-        self.geocoder = Nominatim(user_agent=user_agent, timeout=timeout)
         self.cache = GeocodeCache() if use_cache else None
+        
+        # Initialize multiple geocoding services
+        self.geocoders = []
+        
+        # Primary: Nominatim (OpenStreetMap) - Free and reliable
+        self.geocoders.append(('Nominatim', Nominatim(user_agent=user_agent)))
+        
+        # Secondary: Google (if API key available)
+        google_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
+        if google_api_key:
+            try:
+                from geopy.geocoders import GoogleV3
+                self.geocoders.append(('Google', GoogleV3(api_key=google_api_key)))
+            except ImportError:
+                pass
+        
+        # Tertiary: ArcGIS (free, no API key needed)
+        try:
+            from geopy.geocoders import ArcGIS
+            self.geocoders.append(('ArcGIS', ArcGIS()))
+        except ImportError:
+            pass
     
     def geocode_address(self, address: str) -> Optional[Tuple[float, float]]:
         """
-        Convert an address to latitude, longitude coordinates.
+        Convert an address to latitude, longitude coordinates using multiple services.
         
         Args:
             address: Street address string
@@ -91,36 +115,40 @@ class AddressGeocoder:
                 else:
                     return None
         
-        try:
-            # Add small delay to respect rate limits
-            time.sleep(0.1)
-            
-            location = self.geocoder.geocode(address)
-            
-            if location:
-                result = {
-                    'success': True,
-                    'lat': location.latitude,
-                    'lon': location.longitude,
-                    'full_address': location.address
-                }
+        # Try each geocoding service
+        for service_name, geocoder in self.geocoders:
+            try:
+                # Add small delay to respect rate limits
+                time.sleep(0.1)
                 
-                if self.cache:
-                    self.cache.set(address, result)
+                location = geocoder.geocode(address)
                 
-                return (location.latitude, location.longitude)
-            else:
-                # Cache negative results to avoid repeated failures
-                if self.cache:
-                    self.cache.set(address, {'success': False})
-                return None
-                
-        except (GeocoderTimedOut, GeocoderUnavailable) as e:
-            print(f"Geocoding error for '{address}': {e}")
-            return None
-        except Exception as e:
-            print(f"Unexpected error geocoding '{address}': {e}")
-            return None
+                if location:
+                    result = {
+                        'success': True,
+                        'lat': location.latitude,
+                        'lon': location.longitude,
+                        'full_address': location.address,
+                        'service_used': service_name
+                    }
+                    
+                    if self.cache:
+                        self.cache.set(address, result)
+                    
+                    return (location.latitude, location.longitude)
+                    
+            except (GeocoderTimedOut, GeocoderUnavailable) as e:
+                print(f"  {service_name} geocoding timeout/unavailable for '{address}': {e}")
+                continue
+            except Exception as e:
+                print(f"  {service_name} geocoding error for '{address}': {e}")
+                continue
+        
+        # Cache negative results to avoid repeated failures
+        if self.cache:
+            self.cache.set(address, {'success': False})
+        
+        return None
     
     def geocode_addresses(self, addresses: List[str]) -> Dict[str, Optional[Tuple[float, float]]]:
         """
