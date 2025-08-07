@@ -205,25 +205,27 @@ def format_time(time_hours: float) -> str:
 
 def print_route_summary(addresses: List[str], 
                        route_order: List[int],
-                       total_distance: float,
-                       total_time: float) -> None:
+                       total_cost: float,
+                       optimize_by: str) -> None:
     """
     Print a summary of the optimized route.
     
     Args:
         addresses: List of addresses
         route_order: Optimized route order
-        total_distance: Total distance
-        total_time: Total time
+        total_cost: Total cost (distance or time)
+        optimize_by: The metric optimized for ('distance' or 'time')
     """
     print("\n" + "="*60)
     print("DELIVERY ROUTE OPTIMIZATION RESULTS")
     print("="*60)
     
-    print(f"Total Distance: {format_distance(total_distance)}")
-    print(f"Estimated Time: {format_time(total_time)}")
+    if optimize_by == 'time':
+        print(f"Total Time: {format_time(total_cost)}")
+    else:
+        print(f"Total Distance: {format_distance(total_cost)}")
+
     print(f"Number of Stops: {len(addresses)}")
-    print(f"Average per Stop: {format_distance(total_distance / max(len(addresses), 1))}")
     
     print("\nOptimized Route Order:")
     print("-" * 40)
@@ -240,3 +242,12 @@ def print_route_summary(addresses: List[str],
     print("-" * 40)
     print("Return to START to complete route")
     print("="*60)
+
+
+def load_cost_matrix(file_path: str) -> List[List[float]]:
+    """Load a cost matrix from a JSON file."""
+    try:
+        with open(file_path, 'r') as f:
+            return json.load(f)
+    except (IOError, json.JSONDecodeError) as e:
+        raise ValueError(f"Error loading cost matrix from {file_path}: {e}")

@@ -5,49 +5,13 @@ Handles address validation and coordinate lookup using multiple services.
 
 from typing import Dict, List, Optional, Tuple
 import time
-import json
 import os
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut, GeocoderUnavailable
 import requests
-from dotenv import load_dotenv
 
-load_dotenv()
-
-
-class GeocodeCache:
-    """Simple file-based cache for geocoding results."""
-    
-    def __init__(self, cache_file: str = "geocode_cache.json"):
-        self.cache_file = cache_file
-        self.cache = self._load_cache()
-    
-    def _load_cache(self) -> Dict[str, Dict]:
-        """Load cache from file."""
-        if os.path.exists(self.cache_file):
-            try:
-                with open(self.cache_file, 'r', encoding='utf-8') as f:
-                    return json.load(f)
-            except (json.JSONDecodeError, IOError):
-                pass
-        return {}
-    
-    def _save_cache(self) -> None:
-        """Save cache to file."""
-        try:
-            with open(self.cache_file, 'w', encoding='utf-8') as f:
-                json.dump(self.cache, f, indent=2)
-        except IOError:
-            pass
-    
-    def get(self, address: str) -> Optional[Dict]:
-        """Get cached result for address."""
-        return self.cache.get(address.lower())
-    
-    def set(self, address: str, result: Dict) -> None:
-        """Cache result for address."""
-        self.cache[address.lower()] = result
-        self._save_cache()
+from src.cache import GeocodeCache
+from src.config import GOOGLE_API_KEY
 
 
 class AddressGeocoder:
@@ -76,11 +40,10 @@ class AddressGeocoder:
         self.geocoders.append(('Nominatim', Nominatim(user_agent=user_agent)))
         
         # Secondary: Google (if API key available)
-        google_api_key = os.getenv('GOOGLE_MAPS_API_KEY')
-        if google_api_key:
+        if GOOGLE_API_KEY:
             try:
                 from geopy.geocoders import GoogleV3
-                self.geocoders.append(('Google', GoogleV3(api_key=google_api_key)))
+                self.geocoders.append(('Google', GoogleV3(api_key=GOOGLE_API_KEY)))
             except ImportError:
                 pass
         

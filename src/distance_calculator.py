@@ -8,9 +8,9 @@ import math
 import requests
 import os
 import time
-from dotenv import load_dotenv
 
-load_dotenv()
+from src.cache import RouteCache
+from src.config import ORS_API_KEY, GOOGLE_API_KEY
 
 
 class RoadRoutingService:
@@ -26,7 +26,7 @@ class OpenRouteService(RoadRoutingService):
     """OpenRouteService routing (free with API key)."""
     
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv('OPENROUTESERVICE_API_KEY')
+        self.api_key = api_key or ORS_API_KEY
         self.base_url = "https://api.openrouteservice.org/v2/directions/driving-car"
     
     def get_route_info(self, origin: Tuple[float, float], 
@@ -72,7 +72,7 @@ class GoogleMapsRouting(RoadRoutingService):
     """Google Maps routing service."""
     
     def __init__(self, api_key: Optional[str] = None):
-        self.api_key = api_key or os.getenv('GOOGLE_MAPS_API_KEY')
+        self.api_key = api_key or GOOGLE_API_KEY
         self.base_url = "https://maps.googleapis.com/maps/api/directions/json"
     
     def get_route_info(self, origin: Tuple[float, float], 
@@ -147,6 +147,42 @@ class OSRMRouting(RoadRoutingService):
             print(f"OSRM routing error: {e}")
             return None
 
+    def get_distance_duration_matrix(self, coordinates: List[Tuple[float, float]]) -> Optional[Tuple[List[List[float]], List[List[float]]]]:
+        """Get distance and duration matrices from OSRM Table service."""
+        if not coordinates or len(coordinates) < 2:
+            return None
+
+        try:
+            # Format coordinates for OSRM URL: lon,lat;lon,lat;...
+            coords_str = ";".join([f"{lon},{lat}" for lat, lon in coordinates])
+            url = f"{self.server_url}/table/v1/driving/{coords_str}"
+            params = {
+                'annotations': 'distance,duration'
+            }
+
+            response = requests.get(url, params=params, timeout=30)
+
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('code') == 'Ok':
+                    distances_m = data.get('distances')
+                    durations_s = data.get('durations')
+
+                    if not distances_m or not durations_s:
+                        return None
+
+                    # Convert units: meters to km, seconds to hours
+                    distances_km = [[d / 1000.0 if d is not None else float('inf') for d in row] for row in distances_m]
+                    durations_h = [[t / 3600.0 if t is not None else float('inf') for t in row] for row in durations_s]
+
+                    return distances_km, durations_h
+
+            return None
+
+        except Exception as e:
+            print(f"OSRM matrix error: {e}")
+            return None
+
 
 class DistanceCalculator:
     """
@@ -166,19 +202,17 @@ class DistanceCalculator:
         self.preferred_service = preferred_service
         
         # Initialize routing services
-        self.routing_services = []
-        
-        if preferred_service == 'auto' or preferred_service == 'osrm':
-            self.routing_services.append(OSRMRouting())
-        
-        if preferred_service == 'auto' or preferred_service == 'openroute':
-            self.routing_services.append(OpenRouteService())
-        
-        if preferred_service == 'auto' or preferred_service == 'google':
-            self.routing_services.append(GoogleMapsRouting())
+        self.routing_services = {
+            'osrm': OSRMRouting(),
+            'openroute': OpenRouteService(),
+            'google': GoogleMapsRouting()
+        }
         
         # Cache for route calculations
-        self.route_cache = {}
+        self.route_cache = RouteCache()
+        self._in_memory_route_cache = {} # For individual route segments
+        self.distance_matrix_cache = None
+        self.duration_matrix_cache = None
         
         print(f"DistanceCalculator initialized with {len(self.routing_services)} routing services")
         if self.use_real_roads:
@@ -230,50 +264,78 @@ class DistanceCalculator:
         # Create cache key
         cache_key = f"{origin[0]:.6f},{origin[1]:.6f}-{destination[0]:.6f},{destination[1]:.6f}"
         
-        if cache_key in self.route_cache:
-            return self.route_cache[cache_key]
+        if cache_key in self._in_memory_route_cache:
+            return self._in_memory_route_cache[cache_key]
         
-        # Try each routing service
-        for service in self.routing_services:
+        # Try each routing service in a defined order
+        service_order = ['osrm', 'openroute', 'google']
+        active_services = [self.routing_services[s_name] for s_name in service_order if s_name in self.routing_services]
+
+        for service in active_services:
             route_info = service.get_route_info(origin, destination)
             if route_info:
-                self.route_cache[cache_key] = route_info
+                self._in_memory_route_cache[cache_key] = route_info
                 return route_info
             
             # Small delay between service attempts
             time.sleep(0.1)
         
         return None
-    
+
     def calculate_distance_matrix(self, coordinates: List[Tuple[float, float]], 
                                  show_progress: bool = True) -> List[List[float]]:
         """
         Calculate distance matrix between all pairs of coordinates.
-        
-        Args:
-            coordinates: List of (latitude, longitude) tuples
-            show_progress: Whether to show calculation progress
-            
-        Returns:
-            2D matrix where matrix[i][j] is distance from point i to point j
+        Uses OSRM table service for efficiency if available.
         """
+        if self.distance_matrix_cache:
+            return self.distance_matrix_cache
+
         n = len(coordinates)
+        if n == 0:
+            return []
+
+        # Check persistent cache first
+        cached_matrices = self.route_cache.get(coordinates)
+        if cached_matrices:
+            print("  Found route matrix in persistent cache.")
+            self.distance_matrix_cache = cached_matrices['distances']
+            self.duration_matrix_cache = cached_matrices['durations']
+            return self.distance_matrix_cache
+
+        # Efficient matrix calculation using OSRM
+        if self.use_real_roads and 'osrm' in self.routing_services:
+            print("  Attempting to use OSRM matrix service for efficiency...")
+            osrm_service = self.routing_services['osrm']
+            matrix_data = osrm_service.get_distance_duration_matrix(coordinates)
+
+            if matrix_data:
+                print("  Successfully calculated matrix using OSRM.")
+                self.distance_matrix_cache, self.duration_matrix_cache = matrix_data
+                # Save to persistent cache
+                self.route_cache.set(coordinates, self.distance_matrix_cache, self.duration_matrix_cache)
+                return self.distance_matrix_cache
+
+            print("  OSRM matrix service failed, falling back to individual calculations.")
+
+        # Fallback to calculating pair by pair
         matrix = [[0.0 for _ in range(n)] for _ in range(n)]
-        
-        total_calculations = n * (n - 1) // 2  # Only need upper triangle
+        total_calculations = n * (n - 1)
         current_calculation = 0
         
         for i in range(n):
-            for j in range(i + 1, n):  # Only calculate upper triangle
-                current_calculation += 1
+            for j in range(n):
+                if i == j:
+                    continue
                 
+                current_calculation += 1
                 if show_progress and total_calculations > 10:
-                    print(f"  Calculating distances: {current_calculation}/{total_calculations}")
+                    print(f"  Calculating distances (fallback): {current_calculation}/{total_calculations}")
                 
                 distance = self._calculate_single_distance(coordinates[i], coordinates[j])
                 matrix[i][j] = distance
-                matrix[j][i] = distance  # Symmetric matrix
         
+        self.distance_matrix_cache = matrix
         return matrix
     
     def _calculate_single_distance(self, coord1: Tuple[float, float], 
@@ -290,15 +352,29 @@ class DistanceCalculator:
         
         return self.haversine_distance(coord1, coord2)
     
-    def get_route_duration_matrix(self, coordinates: List[Tuple[float, float]]) -> List[List[float]]:
+    def get_duration_matrix(self, coordinates: List[Tuple[float, float]],
+                             show_progress: bool = True) -> List[List[float]]:
         """
-        Calculate duration matrix between all pairs of coordinates.
+        Calculate or retrieve the cached duration matrix.
+        """
+        # If cache is available, return it
+        if self.duration_matrix_cache:
+            return self.duration_matrix_cache
+
+        # If not cached, the distance matrix calculation will populate it
+        print("  Duration matrix not found, calculating new matrices...")
+        self.calculate_distance_matrix(coordinates, show_progress)
         
-        Args:
-            coordinates: List of (latitude, longitude) tuples
-            
-        Returns:
-            2D matrix where matrix[i][j] is travel time in hours from point i to point j
+        # If the cache is still empty (e.g., fallback didn't run), calculate manually
+        if not self.duration_matrix_cache:
+             print("  Calculating duration matrix manually...")
+             self.duration_matrix_cache = self._calculate_duration_matrix_manually(coordinates)
+
+        return self.duration_matrix_cache
+
+    def _calculate_duration_matrix_manually(self, coordinates: List[Tuple[float, float]]) -> List[List[float]]:
+        """
+        Calculate duration matrix manually, pair by pair.
         """
         n = len(coordinates)
         matrix = [[0.0 for _ in range(n)] for _ in range(n)]
@@ -308,7 +384,7 @@ class DistanceCalculator:
                 if i != j:
                     if self.use_real_roads:
                         route_info = self.get_road_route_info(coordinates[i], coordinates[j])
-                        if route_info:
+                        if route_info and 'duration_hours' in route_info:
                             matrix[i][j] = route_info['duration_hours']
                         else:
                             # Fallback: estimate from straight-line distance
@@ -368,3 +444,33 @@ class DistanceCalculator:
             )
         
         return total_distance
+
+    def get_route_duration_matrix(self, coordinates: List[Tuple[float, float]]) -> List[List[float]]:
+        """
+        Calculate duration matrix between all pairs of coordinates.
+
+        Args:
+            coordinates: List of (latitude, longitude) tuples
+
+        Returns:
+            2D matrix where matrix[i][j] is travel time in hours from point i to point j
+        """
+        n = len(coordinates)
+        matrix = [[0.0 for _ in range(n)] for _ in range(n)]
+
+        for i in range(n):
+            for j in range(n):
+                if i != j:
+                    if self.use_real_roads:
+                        route_info = self.get_road_route_info(coordinates[i], coordinates[j])
+                        if route_info:
+                            matrix[i][j] = route_info['duration_hours']
+                        else:
+                            # Fallback: estimate from straight-line distance
+                            distance = self.haversine_distance(coordinates[i], coordinates[j])
+                            matrix[i][j] = self.estimate_travel_time(distance)
+                    else:
+                        distance = self.haversine_distance(coordinates[i], coordinates[j])
+                        matrix[i][j] = self.estimate_travel_time(distance)
+
+        return matrix

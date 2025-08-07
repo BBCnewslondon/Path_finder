@@ -6,9 +6,7 @@ import unittest
 import math
 import sys
 import os
-
-# Add src directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from unittest.mock import patch
 
 from src.distance_calculator import DistanceCalculator
 
@@ -18,7 +16,22 @@ class TestDistanceCalculator(unittest.TestCase):
     
     def setUp(self):
         """Set up test fixtures."""
-        self.calculator = DistanceCalculator()
+        self.route_cache_file = "route_cache.json"
+        if os.path.exists(self.route_cache_file):
+            os.remove(self.route_cache_file)
+
+        # By default, tests run with straight-line distances to avoid network calls
+        self.calculator = DistanceCalculator(use_real_roads=False)
+        self.coordinates = [
+            (40.7128, -74.0060),  # New York
+            (34.0522, -118.2437), # Los Angeles
+            (41.8781, -87.6298),  # Chicago
+        ]
+
+    def tearDown(self):
+        """Clean up after tests."""
+        if os.path.exists(self.route_cache_file):
+            os.remove(self.route_cache_file)
     
     def test_haversine_distance_same_point(self):
         """Test haversine distance for same point."""
@@ -27,6 +40,38 @@ class TestDistanceCalculator(unittest.TestCase):
         
         self.assertAlmostEqual(distance, 0.0, places=6)
     
+    @patch('src.distance_calculator.requests.get')
+    def test_calculate_distance_matrix_real_roads_mocked(self, mock_get):
+        """Test distance matrix calculation with mocked real roads API."""
+        # Create a mock response object
+        mock_response = unittest.mock.Mock()
+        mock_response.status_code = 200
+        mock_json = {
+            "code": "Ok",
+            "distances": [[0, 20000], [21000, 0]],
+            "durations": [[0, 1800], [1850, 0]]
+        }
+        mock_response.json.return_value = mock_json
+        mock_get.return_value = mock_response
+
+        # Use real roads
+        calculator_real = DistanceCalculator(use_real_roads=True)
+        coordinates = self.coordinates[:2] # Use two coordinates for simplicity
+
+        dist_matrix = calculator_real.calculate_distance_matrix(coordinates)
+
+        # Check that requests.get was called
+        mock_get.assert_called_once()
+
+        # Check that the distance matrix is correct (20000m = 20km)
+        self.assertAlmostEqual(dist_matrix[0][1], 20.0, places=2)
+        self.assertAlmostEqual(dist_matrix[1][0], 21.0, places=2)
+
+        # Check that the duration matrix was also cached correctly
+        dur_matrix = calculator_real.get_duration_matrix(coordinates)
+        self.assertAlmostEqual(dur_matrix[0][1], 1800 / 3600, places=4) # 1800s = 0.5h
+        self.assertAlmostEqual(dur_matrix[1][0], 1850 / 3600, places=4)
+
     def test_haversine_distance_known_cities(self):
         """Test haversine distance between known cities."""
         # New York to Los Angeles (approximately 3944 km)
@@ -38,6 +83,30 @@ class TestDistanceCalculator(unittest.TestCase):
         # Should be approximately 3944 km (within 100 km tolerance)
         self.assertGreater(distance, 3800)
         self.assertLess(distance, 4100)
+
+    @patch('src.distance_calculator.DistanceCalculator._calculate_single_distance', return_value=10.0)
+    @patch('src.distance_calculator.requests.get')
+    def test_calculate_distance_matrix_api_failure_fallback(self, mock_get, mock_single_dist):
+        """Test that the calculator falls back to single distance calls on API failure."""
+        # Simulate an API failure
+        mock_response = unittest.mock.Mock()
+        mock_response.status_code = 500
+        mock_get.return_value = mock_response
+
+        calculator_real = DistanceCalculator(use_real_roads=True)
+        coordinates = self.coordinates[:3] # Use three coordinates
+
+        dist_matrix = calculator_real.calculate_distance_matrix(coordinates)
+
+        # Check that the OSRM matrix API was called
+        mock_get.assert_called_once()
+
+        # Check that the fallback method was called for each pair (3*2 = 6 pairs)
+        self.assertEqual(mock_single_dist.call_count, 6)
+
+        # Check that the matrix contains the fallback value
+        self.assertEqual(dist_matrix[0][1], 10.0)
+        self.assertEqual(dist_matrix[1][2], 10.0)
     
     def test_haversine_distance_symmetric(self):
         """Test that haversine distance is symmetric."""

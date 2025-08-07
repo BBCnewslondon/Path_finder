@@ -6,9 +6,6 @@ import unittest
 import sys
 import os
 
-# Add src directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-
 from src.route_optimizer import RouteOptimizer
 
 
@@ -83,13 +80,22 @@ class TestRouteOptimizer(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.optimizer.optimize_route(self.distance_matrix)
     
-    def test_calculate_route_distance(self):
-        """Test route distance calculation."""
+    def test_calculate_route_distance_round_trip(self):
+        """Test round trip route distance calculation."""
         route = [0, 1, 2, 3]
-        distance = self.optimizer._calculate_route_distance(route, self.distance_matrix)
+        distance = self.optimizer._calculate_route_distance(route, self.distance_matrix, is_round_trip=True)
         
         # Distance should be: 0->1 (10) + 1->2 (35) + 2->3 (30) + 3->0 (20) = 95
         expected_distance = 10.0 + 35.0 + 30.0 + 20.0
+        self.assertEqual(distance, expected_distance)
+
+    def test_calculate_route_distance_open_tour(self):
+        """Test open tour route distance calculation."""
+        route = [0, 1, 3, 2] # A possible open route from 0 to 2
+        distance = self.optimizer._calculate_route_distance(route, self.distance_matrix, is_round_trip=False)
+
+        # Distance should be: 0->1 (10) + 1->3 (25) + 3->2 (30) = 65
+        expected_distance = 10.0 + 25.0 + 30.0
         self.assertEqual(distance, expected_distance)
     
     def test_different_start_index(self):

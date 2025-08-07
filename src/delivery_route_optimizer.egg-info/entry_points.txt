@@ -1,0 +1,2 @@
+[console_scripts]
+delivery-optimizer = main:main

@@ -7,10 +7,8 @@ from unittest.mock import Mock, patch
 import sys
 import os
 
-# Add src directory to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-
-from src.geocoder import AddressGeocoder, GeocodeCache
+from src.geocoder import AddressGeocoder
+from src.cache import GeocodeCache
 
 
 class TestGeocodeCache(unittest.TestCase):
@@ -65,50 +63,60 @@ class TestAddressGeocoder(unittest.TestCase):
         result = self.geocoder.geocode_address("   ")
         self.assertIsNone(result)
     
-    @patch('src.geocoder.Nominatim')
-    def test_geocode_successful(self, mock_nominatim):
-        """Test successful geocoding."""
-        # Mock the geocoder response
+    def test_geocode_successful(self):
+        """Test successful geocoding with a mock."""
+        geocoder = AddressGeocoder(use_cache=False)
+
         mock_location = Mock()
-        mock_location.latitude = 40.7128
-        mock_location.longitude = -74.0060
-        mock_location.address = "New York, NY"
+        mock_location.latitude, mock_location.longitude = 40.7128, -74.0060
         
-        mock_geocoder_instance = Mock()
-        mock_geocoder_instance.geocode.return_value = mock_location
-        mock_nominatim.return_value = mock_geocoder_instance
+        mock_service = Mock()
+        mock_service.geocode.return_value = mock_location
         
-        geocoder = AddressGeocoder(use_cache=False)
-        result = geocoder.geocode_address("New York, NY")
+        geocoder.geocoders = [('MockService', mock_service)]
         
-        self.assertIsNotNone(result)
+        result = geocoder.geocode_address("Any Address")
         self.assertEqual(result, (40.7128, -74.0060))
-    
-    @patch('src.geocoder.Nominatim')
-    def test_geocode_failure(self, mock_nominatim):
-        """Test geocoding failure."""
-        mock_geocoder_instance = Mock()
-        mock_geocoder_instance.geocode.return_value = None
-        mock_nominatim.return_value = mock_geocoder_instance
-        
+
+    def test_geocode_failure(self):
+        """Test geocoding failure with a mock."""
         geocoder = AddressGeocoder(use_cache=False)
-        result = geocoder.geocode_address("Invalid Address")
         
+        mock_service = Mock()
+        mock_service.geocode.return_value = None
+
+        geocoder.geocoders = [('MockService', mock_service)]
+
+        result = geocoder.geocode_address("Invalid Address")
         self.assertIsNone(result)
-    
+
     def test_validate_addresses(self):
-        """Test address validation."""
-        # Mock the geocode_address method
-        with patch.object(self.geocoder, 'geocode_address') as mock_geocode:
-            mock_geocode.side_effect = lambda addr: (40.0, -88.0) if "valid" in addr.lower() else None
-            
-            addresses = ["Valid Address 1", "Invalid Address", "Valid Address 2"]
-            valid_addresses = self.geocoder.validate_addresses(addresses)
-            
-            self.assertEqual(len(valid_addresses), 2)
-            self.assertIn("Valid Address 1", valid_addresses)
-            self.assertIn("Valid Address 2", valid_addresses)
-            self.assertNotIn("Invalid Address", valid_addresses)
+        """Test address validation with a mock."""
+        geocoder = AddressGeocoder(use_cache=False)
+
+        # Create a dummy location object to be returned on success
+        valid_location = Mock()
+        valid_location.latitude, valid_location.longitude = 40.0, -88.0
+
+        # Mock the geocoding service
+        mock_service = Mock()
+        # Set the side effect to return a location, then None, then a location
+        mock_service.geocode.side_effect = [valid_location, None, valid_location]
+
+        # Replace the real geocoders with our mock
+        geocoder.geocoders = [('MockService', mock_service)]
+
+        addresses = ["Valid Address 1", "Invalid Address", "Valid Address 2"]
+        valid_addresses = geocoder.validate_addresses(addresses)
+
+        # Check that geocode was called for all three addresses
+        self.assertEqual(mock_service.geocode.call_count, 3)
+
+        # Check that the final list is correct
+        self.assertEqual(len(valid_addresses), 2)
+        self.assertIn("Valid Address 1", valid_addresses)
+        self.assertIn("Valid Address 2", valid_addresses)
+        self.assertNotIn("Invalid Address", valid_addresses)
 
 
 if __name__ == '__main__':
