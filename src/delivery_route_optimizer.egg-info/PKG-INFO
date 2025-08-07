@@ -17,162 +17,110 @@ Requires-Dist: folium==0.15.1
 Requires-Dist: python-dotenv==1.0.0
 Requires-Dist: ortools==9.8.3296
 Requires-Dist: polyline==2.0.2
+Requires-Dist: streamlit==1.33.0
 
-# De## Features
+# Delivery Route Optimizer
 
-- **Address Geocoding**: Convert street addresses to G# Create visual comparison of straight-line vs real road routes
-python examples/visual_comparison.py
-
-# Use straight-line distances (faster but less accurate)
-python main.py --file addresses.txt --straight-lineordinates with caching
-- **🆕 Real Road Routing**: Uses actual road networks for accurate distance calculations
-- **🆕 Real Road Visualization**: Maps show actual driving routes following streets (not straight lines)
-- **Multiple Routing Services**: OSRM (free), Google Maps, OpenRouteService with automatic fallback
-- **Route Optimization**: Find the shortest path visiting all delivery locations
-- **Multiple Algorithms**: Support for different TSP solving approaches
-- **Visual Maps**: Generate interactive maps showing optimized routes
-- **Time Estimation**: Calculate estimated travel times between locations
-- **Flexible Input**: Support for various address formats
-- **🆕 Routing Comparison**: Compare straight-line vs real road distancesoute Optimizer
-
-A Python application that finds the shortest delivery routes for multiple addresses, optimizing for minimum travel time. This software solves the Traveling Salesman Problem (TSP) to help delivery personnel minimize their time on the road.
+A Python application that finds the shortest or fastest delivery routes for multiple addresses. This software solves the Traveling Salesman Problem (TSP) to help delivery personnel minimize their time and distance on the road.
 
 ## Features
 
-- **Address Geocoding**: Convert street addresses to GPS coordinates
-- **Route Optimization**: Find the shortest path visiting all delivery locations
-- **Multiple Algorithms**: Support for different TSP solving approaches
-- **Visual Maps**: Generate interactive maps showing optimized routes
-- **Time Estimation**: Calculate estimated travel times between locations
-- **Flexible Input**: Support for various address formats
+- **Address Geocoding**: Converts street addresses to GPS coordinates with persistent caching.
+- **Multiple Optimization Algorithms**: Choose between Nearest Neighbor, 2-opt, OR-Tools, and a Genetic Algorithm.
+- **Time & Distance Optimization**: Optimize for the fastest route (travel time) or the shortest route (distance).
+- **Real Road Routing**: Uses OSRM's real road network data for accurate distance and time calculations.
+- **Open Tours**: Supports routes with different start and end points.
+- **Interactive Maps**: Generates interactive HTML maps of the optimized route using Folium.
+- **Flexible Input**: Load addresses from the command line or from `.txt`, `.csv`, or `.json` files.
+- **Configurable**: A simple `config.ini` file allows for easy configuration of API keys and default settings.
+- **High Performance**: Uses efficient matrix-based API calls and persistent caching of route data to ensure fast results on subsequent runs.
 
 ## Quick Start
 
-To test the application immediately with sample data:
-
-```bash
-# Activate the virtual environment (if not already active)
-.venv\Scripts\activate
-
-# Run with sample addresses and generate a map
-python main.py --file examples/sample_addresses.txt --algorithm 2opt --map route_map.html
-
-# Run the examples script to see all features
-python examples/example_usage.py
-```
-
-This will create an optimized delivery route and generate an interactive HTML map that you can open in your web browser.
+1.  **Install the package:**
+    ```bash
+    pip install .
+    ```
+2.  **(Optional) Configure the application:**
+    -   Copy `config.ini.example` to `config.ini` (if it doesn't exist).
+    -   Add your API keys to `config.ini` if you have them.
+3.  **Run an optimization:**
+    ```bash
+    delivery-optimizer --file examples/sample_addresses.txt --map
+    ```
+This will calculate the optimal route for the sample addresses, generate an interactive map named `route_map.html`, and save the results to `route_results.json`.
 
 ## Installation
 
-1. Clone or download this repository
-2. **Activate the virtual environment** (already created):
-   ```bash
-   # On Windows
-   .venv\Scripts\activate
-
-   # On macOS/Linux
-   source .venv/bin/activate
-   ```
-3. Install required dependencies (if not already installed):
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. (Optional) Get a free API key from a mapping service for enhanced geocoding
-5. (Optional) Create a `.env` file and add your API keys (see `.env.example`)
+1.  Clone or download this repository.
+2.  Navigate to the project directory.
+3.  Install the project and its dependencies:
+    ```bash
+    pip install .
+    ```
+    This command will also create the `delivery-optimizer` command-line tool.
+4.  (Optional) Create and configure your `config.ini` file for API keys and custom defaults.
 
 ## Usage
 
-### Basic Command Line Usage
+### Command Line Interface (CLI)
+
+The primary way to use the application is through the `delivery-optimizer` command.
+
+**Basic Examples:**
 
 ```bash
-# Optimize a route with a list of addresses
-python main.py --addresses "123 Main St, City, State" "456 Oak Ave, City, State" "789 Pine Rd, City, State"
+# Optimize a route from a list of addresses
+delivery-optimizer --addresses "123 Main St, City" "456 Oak Ave, City" "789 Pine Rd, City"
 
-# Load addresses from a file
-python main.py --file addresses.txt
+# Load addresses from a file and generate a map
+delivery-optimizer --file examples/sample_addresses.txt --map
 
-# Generate an interactive map with real road routing
-python main.py --addresses "Address 1" "Address 2" "Address 3" --map output_map.html --roads
+# Optimize for the fastest time instead of the shortest distance
+delivery-optimizer --file examples/uk_addresses.txt --optimize-by time
 
-# Compare straight-line vs road routing
-python examples/routing_comparison.py
-
-# Use straight-line distances (faster, less accurate)
-python main.py --file addresses.txt --straight-line
-
-# Try the sample data
-python main.py --file examples/sample_addresses.txt --algorithm 2opt --map route_map.html
+# Specify a different start and end address (open tour)
+delivery-optimizer --file addresses.txt --start "Depot Address" --end "Final Destination"
 ```
 
-### Python API Usage
+### Python API
+
+You can also integrate the optimizer into your own Python scripts.
 
 ```python
-from route_optimizer import RouteOptimizer
+from src.route_optimizer import RouteOptimizer
+from src.distance_calculator import DistanceCalculator
+from src.geocoder import AddressGeocoder
 
-# Create optimizer instance
-optimizer = RouteOptimizer()
+# 1. Geocode addresses
+addresses = ["Address 1", "Address 2", "Address 3"]
+geocoder = AddressGeocoder()
+coords = [geocoder.geocode_address(addr) for addr in addresses]
+valid_coords = [c for c in coords if c]
 
-# Add addresses
-addresses = [
-    "123 Main Street, Springfield, IL",
-    "456 Oak Avenue, Springfield, IL",
-    "789 Pine Road, Springfield, IL"
-]
+# 2. Calculate a cost matrix (e.g., for time)
+dist_calc = DistanceCalculator(use_real_roads=True)
+duration_matrix = dist_calc.get_duration_matrix(valid_coords)
 
-# Find optimal route
-route = optimizer.optimize_route(addresses)
-print(f"Optimized route: {route}")
+# 3. Optimize the route
+optimizer = RouteOptimizer(algorithm="ortools")
+route_indices, total_time = optimizer.optimize_route(duration_matrix)
+
+print(f"Optimized route order (indices): {route_indices}")
+print(f"Total time: {total_time:.2f} hours")
 ```
 
-## Project Structure
+## Configuration
 
-```
-Path_finder/
-├── src/
-│   ├── __init__.py
-│   ├── geocoder.py          # Address to coordinate conversion
-│   ├── route_optimizer.py   # Main optimization logic
-│   ├── distance_calculator.py # Calculate distances/times
-│   ├── map_generator.py     # Generate visual maps
-│   └── utils.py            # Helper functions
-├── tests/
-│   ├── __init__.py
-│   ├── test_geocoder.py
-│   ├── test_optimizer.py
-│   └── test_distance.py
-├── examples/
-│   ├── sample_addresses.txt
-│   └── example_usage.py
-├── main.py                 # CLI entry point
-├── requirements.txt
-├── .env.example
-└── README.md
-```
+Application settings can be managed in the `config.ini` file. This allows you to set API keys and change default behaviors without modifying the code.
 
-## Algorithm Details
+-   **`[api_keys]`**: Add your API keys for OpenRouteService or Google Maps here. Environment variables will override these values if set.
+-   **`[optimization]`**: Change the `default_algorithm` or `default_optimize_by` (time/distance).
+-   **`[genetic_algorithm]`**: Tweak parameters for the genetic algorithm.
+-   **`[defaults]`**: Set the default output filenames for maps and results.
 
-The software implements multiple approaches to solve the TSP:
+## Performance
 
-1. **Nearest Neighbor**: Fast heuristic for quick results
-2. **2-opt Improvement**: Local search optimization
-3. **OR-Tools**: Google's optimization library for exact solutions
-4. **Genetic Algorithm**: Evolutionary approach for larger datasets
-
-## 🆕 Road Routing Services
-
-The software now supports real road network routing through multiple services:
-
-1. **OSRM (Open Source Routing Machine)**: Free, no API key required
-2. **OpenRouteService**: Free with API key registration
-3. **Google Maps**: Requires paid API key but very accurate
-
-The system automatically tries multiple services with fallback to ensure reliability.
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
-
-## License
-
-This project is open source and available under the MIT License.
+The application is designed for high performance:
+- **Matrix API Calls**: It uses the OSRM "table" service to fetch the entire distance/duration matrix in a single API call, avoiding slow, iterative requests.
+- **Persistent Caching**: Geocoding results (`geocode_cache.json`) and calculated route matrices (`route_cache.json`) are cached to disk. If you run a route with the same set of locations again, the result will be loaded from the cache almost instantly.
