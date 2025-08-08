@@ -103,3 +103,24 @@ Application settings can be managed in the `config.ini` file. This allows you to
 The application is designed for high performance:
 - **Matrix API Calls**: It uses the OSRM "table" service to fetch the entire distance/duration matrix in a single API call, avoiding slow, iterative requests.
 - **Persistent Caching**: Geocoding results (`geocode_cache.json`) and calculated route matrices (`route_cache.json`) are cached to disk. If you run a route with the same set of locations again, the result will be loaded from the cache almost instantly.
+
+## Deployment
+
+This application is ready for deployment using Docker. A `Dockerfile` is included to containerize the Streamlit UI and the backend.
+
+### Building the Docker Image
+
+Navigate to the project root directory and run the following command:
+```bash
+docker build -t delivery-optimizer-app .
+```
+
+### Running the Application in Docker
+
+Once the image is built, you can run the application in a container:
+```bash
+docker run -p 8501:8501 delivery-optimizer-app
+```
+The Streamlit application will then be accessible at `http://localhost:8501` in your web browser.
+
+This Docker image can be deployed to any cloud provider that supports containers, such as AWS, Google Cloud, or Heroku.
