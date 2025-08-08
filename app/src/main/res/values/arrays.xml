@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="algorithm_options">
+        <item>2opt</item>
+        <item>nearest_neighbor</item>
+        <item>ortools</item>
+        <item>genetic</item>
+    </string-array>
+
+    <string-array name="optimize_by_options">
+        <item>distance</item>
+        <item>time</item>
+    </string-array>
+</resources>
