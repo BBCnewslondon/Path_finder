@@ -17,6 +17,17 @@ from src.utils import print_route_summary
 
 st.set_page_config(layout="wide")
 
+# Inject custom CSS to force full width
+st.markdown("""
+    <style>
+    .main .block-container {
+        max-width: 100%;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 st.title("🚚 Delivery Route Optimizer")
 st.write("Enter a list of addresses below (one per line) to find the optimal delivery route.")
 
@@ -114,7 +125,7 @@ if st.button("Generate Optimized Route", type="primary"):
                         map_html = f.read()
 
                     # Display the map outside the columns to use full width
-                    st.components.v1.html(map_html, height=800, scrolling=True)
+                    st.components.v1.html(map_html, height=1000, scrolling=True)
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")

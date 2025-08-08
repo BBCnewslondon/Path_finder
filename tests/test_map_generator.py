@@ -45,8 +45,8 @@ class TestMapGenerator(unittest.TestCase):
         # Check that Map is created once
         mock_folium.Map.assert_called_once()
 
-        # Check that markers are created for each coordinate
-        self.assertEqual(mock_folium.Marker.call_count, len(self.coordinates))
+        # Check that CircleMarker is now used instead of Marker
+        self.assertEqual(mock_folium.CircleMarker.call_count, len(self.coordinates))
 
         # Check that a PolyLine is added for the route
         mock_folium.PolyLine.assert_called_once()
@@ -63,8 +63,8 @@ class TestMapGenerator(unittest.TestCase):
         map_gen_real = MapGenerator(use_real_roads=True)
         map_gen_real.create_route_map(self.addresses, self.coordinates, self.route_order, self.output_file)
 
-        # The number of calls should be equal to the number of legs in the route
-        self.assertEqual(mock_get_geometry.call_count, len(self.route_order))
+        # The number of calls should be equal to the number of legs in the route (stops - 1)
+        self.assertEqual(mock_get_geometry.call_count, len(self.route_order) - 1)
 
 
 if __name__ == '__main__':

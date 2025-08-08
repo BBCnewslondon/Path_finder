@@ -8,9 +8,29 @@ import folium
 import os
 import requests
 import polyline  # For decoding route polylines
-from dotenv import load_dotenv
+from typing import List
 
-load_dotenv()
+def _generate_color_gradient(num_colors: int) -> List[str]:
+    """Generates a gradient of hex colors from green to red."""
+    if num_colors < 1:
+        return []
+    if num_colors == 1:
+        return ['#80FF00'] # A middle green
+
+    colors = []
+    for i in range(num_colors):
+        # p ranges from 0 (green) to 1 (red)
+        p = i / (num_colors - 1)
+
+        # Interpolate RGB values
+        # Green (0, 255, 0) -> Red (255, 0, 0)
+        red = int(255 * p)
+        green = int(255 * (1 - p))
+        blue = 0
+
+        colors.append(f"#{red:02x}{green:02x}{blue:02x}")
+
+    return colors
 
 
 class RoadRouteService:
@@ -185,33 +205,34 @@ class MapGenerator:
             tiles='OpenStreetMap'
         )
         
+        # Generate color gradient for the route
+        num_stops = len(route_order)
+        route_colors = _generate_color_gradient(num_stops)
+
         # Add markers for each location
         for i, order_index in enumerate(route_order):
             coord = coordinates[order_index]
             address = addresses[order_index] if order_index < len(addresses) else f"Location {order_index}"
             
-            # Determine marker properties
+            color = route_colors[i]
+
             if i == 0:
-                # Start location
-                icon_color = 'green'
-                icon_symbol = 'play'
                 popup_text = f"START: {address}"
-            elif i == len(route_order) - 1:
-                # End location  
-                icon_color = 'red'
-                icon_symbol = 'stop'
+            elif i == num_stops - 1:
                 popup_text = f"END: {address}"
             else:
-                # Intermediate stops
-                icon_color = 'blue'
-                icon_symbol = 'info-sign'
                 popup_text = f"Stop {i}: {address}"
-            
-            folium.Marker(
+
+            # Use CircleMarker for custom colors
+            folium.CircleMarker(
                 location=[coord[0], coord[1]],
+                radius=8,
+                color=color,
+                fill=True,
+                fill_color=color,
+                fill_opacity=0.8,
                 popup=folium.Popup(popup_text, max_width=300),
-                tooltip=f"Stop {i+1}",
-                icon=folium.Icon(color=icon_color, icon=icon_symbol)
+                tooltip=f"Stop {i+1}"
             ).add_to(route_map)
         
         # Add route lines with real road paths
@@ -219,37 +240,28 @@ class MapGenerator:
             print("  Generating route paths using real roads...")
             
             # Create route segments between consecutive stops
-            for i in range(len(route_order)):
+            for i in range(num_stops - 1):
                 current_idx = route_order[i]
-                next_idx = route_order[(i + 1) % len(route_order)]  # Wrap around for return trip
+                next_idx = route_order[i+1]
                 
                 current_coord = coordinates[current_idx]
                 next_coord = coordinates[next_idx]
                 
-                print(f"    Fetching route segment {i+1}/{len(route_order)}")
+                print(f"    Fetching route segment {i+1}/{num_stops-1}")
                 
                 # Get real road geometry
                 route_geometry = self._get_route_geometry(current_coord, next_coord)
                 
-                # Determine line color based on segment
-                if i == len(route_order) - 1:
-                    # Return to start - use dashed line
-                    line_color = 'orange'
-                    dash_array = '10,5'
-                    popup_text = 'Return to Start'
-                else:
-                    line_color = 'red'
-                    dash_array = None
-                    popup_text = f'Route Segment {i+1}'
+                # Use the color of the starting point for the path segment
+                line_color = route_colors[i]
                 
                 # Add the route line
                 folium.PolyLine(
                     locations=[[lat, lon] for lat, lon in route_geometry],
                     color=line_color,
-                    weight=4,
+                    weight=5,
                     opacity=0.8,
-                    dash_array=dash_array,
-                    popup=popup_text
+                    popup=f'Segment {i+1}'
                 ).add_to(route_map)
         else:
             # Use straight lines (original behavior)
