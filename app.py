@@ -113,7 +113,10 @@ if st.button("Generate Optimized Route", type="primary"):
                     with open(map_path, 'r', encoding='utf-8') as f:
                         map_html = f.read()
 
-                    st.components.v1.html(map_html, height=600)
+                    # Display the map outside the columns to use full width
+                    st.components.v1.html(map_html, height=800, scrolling=True)
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
+else:
+    st.info("Enter addresses and click 'Generate' to see your optimized route map here.")
